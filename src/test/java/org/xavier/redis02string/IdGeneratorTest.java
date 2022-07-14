@@ -16,5 +16,4 @@ public class IdGeneratorTest {
         Long id = generator.produce();
         System.out.println(id);
     }
-
 }
