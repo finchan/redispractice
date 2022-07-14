@@ -51,7 +51,5 @@ public class CacheTest {
         byte[] bytes2 = Base64.getDecoder().decode(byteS2);
         out.write(bytes2);
         out.close();
-
-
     }
 }
