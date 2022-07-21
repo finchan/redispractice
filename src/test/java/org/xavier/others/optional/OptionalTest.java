@@ -192,4 +192,29 @@ public class OptionalTest {
         Assert.assertTrue(emails.size() == 1);
         Assert.assertEquals(emails.get(0), user.getEmail());
     }
+
+    @Test
+    public void testPredictFilter() {
+        UserNormal user = new UserNormal("anna@gmail.com","1", "Dev");
+        CountryNormal country = new CountryNormal();
+        country.setIsoCode("USA");
+        AddressNormal address = new AddressNormal();
+        address.setCountry(country);
+        user.setAddress(address);
+
+        Optional<UserNormal> usr = Optional.ofNullable(user)
+                .filter(u->{
+                    Optional<String> opt = Optional.ofNullable(u.getAddress())
+                            .map(a -> a.getCountry())
+                            .map(c -> c.getIsoCode());
+                    if(opt.isPresent() && opt.get().equals("USA")){
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+        usr.ifPresentOrElse(u->log.info(u.getAddress().getCountry().getIsoCode()), ()->{
+            log.info("User's Country is not USA");
+        });
+    }
 }
