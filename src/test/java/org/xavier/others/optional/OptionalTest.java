@@ -174,7 +174,7 @@ public class OptionalTest {
     }
 
     @Test
-    public void testOptionalNullAndExecute(){
+    public void testOptionalIfPresentOrElse(){
         UserNormal user = null;
         Optional.ofNullable(user)
                 .ifPresentOrElse(u -> log.info("User is: " + u.getEmail()),
