@@ -29,7 +29,7 @@ public class Group {
     public List<Map.Entry<String, List<StreamEntry>>> readMessage(String consumerId, int count) {
         Map.Entry<String, StreamEntryID> entry =
                 new AbstractMap.SimpleImmutableEntry<>(streamKey, StreamEntryID.UNRECEIVED_ENTRY);
-        return this.client.xreadGroup(groupId, consumerId, count, 0, true, entry);
+        return this.client.xreadGroup(groupId, consumerId, count, 0, false, entry);
     }
 
     //确认已处理完毕的信息
