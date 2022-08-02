@@ -18,11 +18,11 @@ public class DBIterator {
     private String currentCursor;
     private Boolean iteratorIsOver;
 
-    public List<String> next(String match, Integer count) {
+    public List<String> next() {
         if(iteratorIsOver) return null;
         ScanParams params = new ScanParams();
-        params.match(match);
-        params.count(count);
+        params.match(this.match);
+        params.count(this.count);
         ScanResult<String> result = this.client.scan(String.valueOf(currentCursor), params);
         Optional.ofNullable(result.getCursor()).ifPresent(cursor->{
             if("0".equals(cursor)) {
