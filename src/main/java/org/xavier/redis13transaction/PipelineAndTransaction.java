@@ -9,6 +9,9 @@ import redis.clients.jedis.Response;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TODO: 这个例子值得深度挖掘 - sync, syncAll, exec - 搞清楚这之间的关联
+ */
 @Data
 @AllArgsConstructor
 public class PipelineAndTransaction {
@@ -25,9 +28,9 @@ public class PipelineAndTransaction {
                 if(i == 5) throw new Exception ("Test DISCARD");
             }
             //执行事务
-            Response<List<Object>> execResult = pipeline.exec();
-//            pipeline.sync(); //no result
-            results = pipeline.syncAndReturnAll();  //with results
+            pipeline.exec();
+            pipeline.sync(); //no result
+//            results = pipeline.syncAndReturnAll();  //with results
         } catch (Exception e) {
             //取消事务
             pipeline.discard();
