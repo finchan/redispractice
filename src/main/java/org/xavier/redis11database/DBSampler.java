@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.ScanResult;
+import redis.clients.jedis.resps.ScanResult;
 
 import java.util.*;
 

@@ -6,8 +6,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Tuple;
+import redis.clients.jedis.resps.Tuple;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -55,7 +56,7 @@ public class RankingListTest {
 
     @Test
     public void top() {
-        Set<Tuple> top3 = rank.top(3L);
+        List<Tuple> top3 = rank.top(3L);
         top3.forEach(ss ->  {
             log.info(ss.getElement() + ": " + ss.getScore());
         });

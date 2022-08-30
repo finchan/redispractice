@@ -2,6 +2,7 @@ package org.xavier.redis06sortedset;
 
 import redis.clients.jedis.Jedis;
 
+import java.util.List;
 import java.util.Set;
 
 public class AutoComplete {
@@ -24,7 +25,7 @@ public class AutoComplete {
      * @param count 自动补全候选结果个数
      * @return Set<String>
      */
-    public Set<String> hint(String prefix, int count){
+    public List<String> hint(String prefix, int count){
        String key = "auto_complete::" + prefix;
        return redis.zrevrange(key, 0, count-1);
     }

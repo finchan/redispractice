@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import redis.clients.jedis.Jedis;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -19,7 +20,7 @@ public class AutoComplete {
         }
     }
 
-    public Set<String> hint(String prefix, int count) {
+    public List<String> hint(String prefix, int count) {
         String key = "auto_complete::" + prefix;
         return this.client.zrevrange(key, 0, count-1);
     }

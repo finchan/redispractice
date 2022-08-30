@@ -2,8 +2,9 @@ package org.xavier.redis06sortedset;
 
 import lombok.Data;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Tuple;
+import redis.clients.jedis.resps.Tuple;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -23,7 +24,7 @@ public class Path {
         redis.zincrby(key, 1, destination);
     }
 
-    public Set<Tuple> paggingRecord(String origin, int pageNumber, int pageSize) {
+    public List<Tuple> paggingRecord(String origin, int pageNumber, int pageSize) {
         String key = makeRecordKey(origin);
         int startIndex = (pageNumber-1)*pageSize;
         int endIndex = pageNumber*pageSize-1;

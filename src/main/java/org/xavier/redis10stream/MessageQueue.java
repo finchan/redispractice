@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.StreamEntry;
 import redis.clients.jedis.StreamEntryID;
+import redis.clients.jedis.params.XReadParams;
+import redis.clients.jedis.resps.StreamEntry;
 
-import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,9 +44,12 @@ public class MessageQueue {
     }
 
     public List<Map.Entry<String, List<StreamEntry>>> iterate(String startId, int maxItem) {
-        Map.Entry<String, StreamEntryID> entry =
-                new AbstractMap.SimpleImmutableEntry<>(streamKey, new StreamEntryID(startId));
-        List<Map.Entry<String, List<StreamEntry>>> result = client.xread(maxItem,0, entry);
+        Map<String, StreamEntryID> entry = new HashMap<>();
+        entry.put(streamKey, new StreamEntryID(startId));
+        XReadParams params = new XReadParams();
+        params.count(maxItem);
+        params.block(0);
+        List<Map.Entry<String, List<StreamEntry>>> result = client.xread(params, entry);
         return result;
     }
 }

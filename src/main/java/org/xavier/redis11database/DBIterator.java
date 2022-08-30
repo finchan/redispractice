@@ -3,8 +3,8 @@ package org.xavier.redis11database;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.ScanParams;
-import redis.clients.jedis.ScanResult;
+import redis.clients.jedis.params.ScanParams;
+import redis.clients.jedis.resps.ScanResult;
 
 import java.util.List;
 import java.util.Optional;

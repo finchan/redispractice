@@ -5,8 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Tuple;
+import redis.clients.jedis.resps.Tuple;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -35,7 +36,7 @@ public class PathTest {
 
     @Test
     public void paggingRecord() {
-        Set<Tuple> records = path.paggingRecord("Pro", 1, 2);
+        List<Tuple> records = path.paggingRecord("Pro", 1, 2);
         Optional.ofNullable(records).ifPresentOrElse(tupleSet -> {
             tupleSet.forEach(tuple -> {
                 log.info(tuple.getElement() + "\t" + tuple.getScore());

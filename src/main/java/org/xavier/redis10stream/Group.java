@@ -3,8 +3,12 @@ package org.xavier.redis10stream;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import redis.clients.jedis.*;
+import redis.clients.jedis.params.XReadGroupParams;
+import redis.clients.jedis.resps.StreamConsumersInfo;
+import redis.clients.jedis.resps.StreamEntry;
+import redis.clients.jedis.resps.StreamGroupInfo;
 
-import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,9 +31,12 @@ public class Group {
 
     //从消费者组中读取信息
     public List<Map.Entry<String, List<StreamEntry>>> readMessage(String consumerId, int count) {
-        Map.Entry<String, StreamEntryID> entry =
-                new AbstractMap.SimpleImmutableEntry<>(streamKey, StreamEntryID.UNRECEIVED_ENTRY);
-        return this.client.xreadGroup(groupId, consumerId, count, 0, false, entry);
+        Map<String, StreamEntryID> entry = new HashMap<>();
+        entry.put(streamKey, StreamEntryID.UNRECEIVED_ENTRY);
+        XReadGroupParams params = new XReadGroupParams();
+        params.count(count);
+        params.block(0);
+        return this.client.xreadGroup(groupId, consumerId, params, entry);
     }
 
     //确认已处理完毕的信息
@@ -38,6 +45,7 @@ public class Group {
     }
 
     //返回消费组信息
+    @Deprecated
     public List<StreamGroupInfo> info() {
         return this.client.xinfoGroup(streamKey);
     }

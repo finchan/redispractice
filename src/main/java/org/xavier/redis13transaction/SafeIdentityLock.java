@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Response;
+import redis.clients.jedis.Transaction;
 import redis.clients.jedis.params.SetParams;
 
 @Data
@@ -23,9 +24,10 @@ public class SafeIdentityLock {
     }
     public boolean release(String inputIdentity) {
         Pipeline pipeline = this.client.pipelined();
+        Transaction tran = new Transaction(client);
         boolean ret = false;
         try{
-            pipeline.watch(this.key);
+            tran.watch(this.key);
             String lockedIdentity = this.client.get(this.key);
 //如果锁的值为空，说明锁已经释放了
             if(lockedIdentity == null) {
@@ -34,9 +36,9 @@ public class SafeIdentityLock {
             } else if(inputIdentity.equals(lockedIdentity)){
                 //如果解锁人与锁持有者相同，可解锁（删除）
                 log.info("解锁人与锁持有人相同，可解锁");
-                pipeline.multi();
+                tran.multi();
                 Response<Long> result = pipeline.del(this.key);
-                pipeline.exec();
+                tran.exec();
                 ret = result.get() == 1L;
             } else {
                 //如果解锁人不同与当前锁持有者
@@ -46,7 +48,7 @@ public class SafeIdentityLock {
         } catch (Exception e) {
             log.error("Exception");
         } finally {
-            pipeline.unwatch();
+            tran.unwatch();
             pipeline.close();
             return ret;
         }

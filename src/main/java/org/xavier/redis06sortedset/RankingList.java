@@ -2,8 +2,9 @@ package org.xavier.redis06sortedset;
 
 import lombok.Data;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Tuple;
+import redis.clients.jedis.resps.Tuple;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -46,7 +47,7 @@ public class RankingList {
         return rank;
     }
 
-    public Set<Tuple> top(Long n){
+    public List<Tuple> top(Long n){
         return client.zrevrangeWithScores(key, 0, n-1);
     }
 }

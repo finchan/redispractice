@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Response;
+import redis.clients.jedis.Transaction;
 
 import java.util.Optional;
 
@@ -32,14 +33,15 @@ public class Semaphore {
     }
 
     public int getCurrentSize() {
-        return client.scard(holderKey).intValue();
+        return (int)client.scard(holderKey);
     }
 
     public boolean acquire(String identity) {
         boolean ret = false;
         Pipeline pipe = client.pipelined();
+        Transaction tran = new Transaction(client);
         try{
-            pipe.watch(sizeKey, holderKey);
+            tran.watch(sizeKey, holderKey);
             //获取当前已被获取的信号数量，以及最大可获取的信号数量
             Response<Long> currentSizeStr = pipe.scard(holderKey);
             //下面的语句是必须的，否则无法调用Response.get()
@@ -58,16 +60,16 @@ public class Semaphore {
             }
 
             if(currentSize < maxSize) {
-                pipe.multi();
+                tran.multi();
                 pipe.sadd(holderKey, identity);
-                pipe.exec();
+                tran.exec();
                 ret = true;
                 log.info("Add successfully");
             }
         } catch(Exception e) {
             log.info(e.getMessage());
         } finally {
-            pipe.unwatch();
+            tran.unwatch();
             pipe.close();
             return ret;
         }

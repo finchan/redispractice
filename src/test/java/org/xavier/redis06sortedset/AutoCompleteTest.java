@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import redis.clients.jedis.Jedis;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -31,7 +32,7 @@ public class AutoCompleteTest {
 
     @Test
     public void hint() {
-        Set<String> result = autoComplete.hint("R", 5);
+        List<String> result = autoComplete.hint("R", 5);
         result.forEach(s->log.info(s));
     }
 }

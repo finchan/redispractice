@@ -2,8 +2,9 @@ package org.xavier.redis06sortedset;
 
 import lombok.Data;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Tuple;
+import redis.clients.jedis.resps.Tuple;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -28,13 +29,13 @@ public class Timeline {
         return  redis.zcard(key);
     }
 
-    public Set< Tuple > paging(int pageNumber, int pageSize){
+    public List<Tuple> paging(int pageNumber, int pageSize){
         int startIndex = (pageNumber-1)*pageSize;
         int endIndex = pageNumber*pageSize-1;
         return redis.zrevrangeWithScores(key, startIndex, endIndex);
     }
 
-    public Set<Tuple> fetchByTimeRange(double minTime, double maxTime, int pageNumber, int pageSize){
+    public List<Tuple> fetchByTimeRange(double minTime, double maxTime, int pageNumber, int pageSize){
         int startIndex = (pageNumber-1)*pageSize;
         return redis.zrevrangeByScoreWithScores(key, maxTime, minTime, startIndex,pageSize);
     }

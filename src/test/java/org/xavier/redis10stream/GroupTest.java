@@ -4,6 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 import redis.clients.jedis.*;
+import redis.clients.jedis.resps.StreamConsumersInfo;
+import redis.clients.jedis.resps.StreamEntry;
+import redis.clients.jedis.resps.StreamGroupInfo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,10 +32,10 @@ public class GroupTest {
         member3.put("k3", "v3");
         Map<String, String> member4 = new HashMap<>();
         member4.put("k4", "v4");
-        jedis.xadd("s1", null, member1);
-        jedis.xadd("s1", null, member2);
-        jedis.xadd("s1", null, member3);
-        jedis.xadd("s1", null, member4);
+        jedis.xadd("s1", StreamEntryID.NEW_ENTRY, member1);
+        jedis.xadd("s1", StreamEntryID.NEW_ENTRY, member2);
+        jedis.xadd("s1", StreamEntryID.NEW_ENTRY, member3);
+        jedis.xadd("s1", StreamEntryID.NEW_ENTRY, member4);
         group = new Group(jedis, "s1", "group1");
     }
 
